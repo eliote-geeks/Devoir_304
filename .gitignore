@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+*.aux
+*.log
+*.out
+*.toc
+api-java/out/
+node_modules/
+308/

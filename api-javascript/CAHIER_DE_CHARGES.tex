@@ -1,0 +1,311 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{verbatim}
+
+\geometry{margin=2.5cm}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue
+}
+
+\begin{document}
+
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+    \centering
+    {\Large Université de Yaoundé I \par}
+    \vspace{0.5cm}
+    {\large Licence 3 ICT \par}
+    \vspace{2cm}
+    {\LARGE \textbf{Cahier de Charges} \par}
+    \vspace{0.5cm}
+    {\Large \textbf{Conception d'une API JavaScript pour un système de transaction bancaire} \par}
+    \vspace{2cm}
+    \begin{tabular}{>{\bfseries}p{5cm}p{8cm}}
+        Étudiant : & KOA ESSAMA PAULIN BRICE \\
+        Matricule : & 25I2255 \\
+        Niveau : & Licence 3 ICT \\
+        Établissement : & Université de Yaoundé I \\
+    \end{tabular}
+    \vfill
+    {\large Année académique 2025--2026 \par}
+\end{titlepage}
+\hypersetup{pageanchor=true}
+
+\tableofcontents
+\newpage
+
+\section*{Informations de l'étudiant}
+\addcontentsline{toc}{section}{Informations de l'étudiant}
+
+\begin{itemize}
+    \item Nom et prénom : \textbf{KOA ESSAMA PAULIN BRICE}
+    \item Matricule : \textbf{25I2255}
+    \item Niveau : \textbf{Licence 3 ICT}
+    \item Établissement : \textbf{Université de Yaoundé I}
+    \item Intitulé du devoir : \textbf{Conception d'une API JavaScript pour un système de transaction bancaire}
+\end{itemize}
+
+\section{Contexte}
+
+Dans le domaine bancaire, les systèmes informatiques permettent d'automatiser la gestion des comptes et des opérations financières. Ce projet consiste à concevoir une API REST en JavaScript permettant de gérer des comptes bancaires, d'effectuer des dépôts, des retraits et de consulter l'historique des transactions.
+
+Cette version est développée en \textbf{Node.js} avec le module natif \texttt{http}, sans framework externe, afin de proposer une solution simple, pédagogique et facile à comprendre dans le cadre d'un devoir universitaire.
+
+\section{Besoin}
+
+Le système doit permettre :
+
+\begin{itemize}
+    \item de créer un compte bancaire ;
+    \item de consulter la liste des comptes existants ;
+    \item de consulter les informations d'un compte précis ;
+    \item d'effectuer un dépôt sur un compte ;
+    \item d'effectuer un retrait sur un compte ;
+    \item de consulter l'historique des transactions d'un compte.
+\end{itemize}
+
+\section{Objectif général}
+
+Développer une API REST en JavaScript pour gérer les opérations bancaires de base d'un client à travers un système simple de comptes et de transactions.
+
+\section{Objectifs spécifiques}
+
+\begin{itemize}
+    \item créer un compte bancaire avec les informations du client ;
+    \item générer un identifiant unique et un numéro de compte ;
+    \item permettre le dépôt d'argent sur un compte ;
+    \item permettre le retrait d'argent en vérifiant le solde disponible ;
+    \item afficher la liste des comptes ;
+    \item afficher les détails d'un compte ;
+    \item afficher l'historique des transactions ;
+    \item documenter l'API via une interface Swagger locale.
+\end{itemize}
+
+\section{Acteurs}
+
+\subsection{Client}
+
+Le client est l'utilisateur principal du système. Il peut :
+
+\begin{itemize}
+    \item ouvrir un compte ;
+    \item consulter son compte ;
+    \item effectuer un dépôt ;
+    \item effectuer un retrait ;
+    \item consulter l'historique de ses opérations.
+\end{itemize}
+
+\subsection{Administrateur système}
+
+L'administrateur assure le suivi du système. Il peut :
+
+\begin{itemize}
+    \item consulter les comptes enregistrés ;
+    \item suivre les transactions ;
+    \item maintenir l'application.
+\end{itemize}
+
+\section{Cas d'utilisation}
+
+\subsection{Cas d'utilisation 1 : Créer un compte}
+
+\begin{itemize}
+    \item Acteur principal : Client
+    \item Description : le client fournit ses informations personnelles pour créer un compte bancaire.
+    \item Résultat attendu : un compte est créé avec un identifiant unique et un numéro de compte.
+\end{itemize}
+
+\subsection{Cas d'utilisation 2 : Lister les comptes}
+
+\begin{itemize}
+    \item Acteur principal : Administrateur système
+    \item Description : le système retourne tous les comptes enregistrés.
+    \item Résultat attendu : la liste des comptes est affichée.
+\end{itemize}
+
+\subsection{Cas d'utilisation 3 : Consulter un compte}
+
+\begin{itemize}
+    \item Acteur principal : Client
+    \item Description : le client demande les informations détaillées de son compte.
+    \item Résultat attendu : le système retourne les informations du compte et les transactions associées.
+\end{itemize}
+
+\subsection{Cas d'utilisation 4 : Effectuer un dépôt}
+
+\begin{itemize}
+    \item Acteur principal : Client
+    \item Description : le client ajoute un montant sur son compte.
+    \item Résultat attendu : le solde est mis à jour et une transaction de dépôt est enregistrée.
+\end{itemize}
+
+\subsection{Cas d'utilisation 5 : Effectuer un retrait}
+
+\begin{itemize}
+    \item Acteur principal : Client
+    \item Description : le client retire un montant de son compte.
+    \item Résultat attendu : si le solde est suffisant, le retrait est effectué et enregistré.
+\end{itemize}
+
+\subsection{Cas d'utilisation 6 : Consulter les transactions}
+
+\begin{itemize}
+    \item Acteur principal : Client
+    \item Description : le client consulte l'historique de ses opérations.
+    \item Résultat attendu : le système affiche toutes les transactions du compte.
+\end{itemize}
+
+\section{Spécifications fonctionnelles}
+
+Le système doit :
+
+\begin{itemize}
+    \item accepter la création d'un compte avec les champs \texttt{full\_name}, \texttt{phone\_number}, \texttt{email} et \texttt{initial\_balance} ;
+    \item générer automatiquement \texttt{id} et \texttt{account\_number} ;
+    \item retourner la liste complète des comptes ;
+    \item retourner les détails d'un compte par son identifiant ;
+    \item accepter un dépôt si le montant est strictement positif ;
+    \item accepter un retrait si le montant est strictement positif et le solde suffisant ;
+    \item enregistrer chaque transaction avec son type, son montant, sa description, son solde après opération et sa date ;
+    \item fournir une documentation Swagger accessible localement.
+\end{itemize}
+
+\section{Spécifications non fonctionnelles}
+
+Le système doit respecter les contraintes suivantes :
+
+\begin{itemize}
+    \item \textbf{Simplicité} : le code doit rester lisible et adapté à un devoir académique.
+    \item \textbf{Performance} : les requêtes doivent répondre rapidement pour les opérations simples.
+    \item \textbf{Fiabilité} : les données doivent être manipulées correctement pendant l'exécution du serveur.
+    \item \textbf{Maintenabilité} : le code doit être structuré clairement.
+    \item \textbf{Portabilité} : l'application doit fonctionner avec Node.js sans dépendances externes.
+    \item \textbf{Disponibilité} : l'API doit être utilisable tant que le serveur est démarré.
+\end{itemize}
+
+\section{Choix techniques}
+
+\begin{itemize}
+    \item Langage : \textbf{JavaScript}
+    \item Environnement : \textbf{Node.js}
+    \item Architecture : \textbf{API REST}
+    \item Serveur HTTP : \textbf{module natif \texttt{http}}
+    \item Documentation : \textbf{Swagger UI local}
+    \item Format d'échange : \textbf{JSON}
+    \item Persistance : \textbf{mémoire vive pendant l'exécution}
+\end{itemize}
+
+\section{Description des endpoints}
+
+\subsection{Accueil}
+
+\begin{itemize}
+    \item Méthode : \texttt{GET}
+    \item URL : \texttt{/}
+\end{itemize}
+
+\subsection{Créer un compte}
+
+\begin{itemize}
+    \item Méthode : \texttt{POST}
+    \item URL : \texttt{/accounts}
+\end{itemize}
+
+\textbf{Exemple de requête}
+
+\begin{verbatim}
+{
+  "full_name": "KOA ESSAMA PAULIN BRICE",
+  "phone_number": "699001122",
+  "email": "thierry@example.com",
+  "initial_balance": 10000
+}
+\end{verbatim}
+
+\subsection{Lister les comptes}
+
+\begin{itemize}
+    \item Méthode : \texttt{GET}
+    \item URL : \texttt{/accounts}
+\end{itemize}
+
+\subsection{Consulter un compte}
+
+\begin{itemize}
+    \item Méthode : \texttt{GET}
+    \item URL : \texttt{/accounts/\{account\_id\}}
+\end{itemize}
+
+\subsection{Faire un dépôt}
+
+\begin{itemize}
+    \item Méthode : \texttt{POST}
+    \item URL : \texttt{/accounts/\{account\_id\}/deposit}
+\end{itemize}
+
+\begin{verbatim}
+{
+  "amount": 5000,
+  "description": "Depot agence"
+}
+\end{verbatim}
+
+\subsection{Faire un retrait}
+
+\begin{itemize}
+    \item Méthode : \texttt{POST}
+    \item URL : \texttt{/accounts/\{account\_id\}/withdraw}
+\end{itemize}
+
+\begin{verbatim}
+{
+  "amount": 2000,
+  "description": "Retrait client"
+}
+\end{verbatim}
+
+\subsection{Lister les transactions d'un compte}
+
+\begin{itemize}
+    \item Méthode : \texttt{GET}
+    \item URL : \texttt{/accounts/\{account\_id\}/transactions}
+\end{itemize}
+
+\section{Règles de gestion}
+
+\begin{itemize}
+    \item chaque compte possède un identifiant unique ;
+    \item chaque compte possède un numéro de compte unique ;
+    \item le solde initial doit être supérieur ou égal à zéro ;
+    \item un dépôt doit avoir un montant strictement positif ;
+    \item un retrait doit avoir un montant strictement positif ;
+    \item un retrait est refusé si le solde est insuffisant ;
+    \item chaque transaction modifie immédiatement le solde ;
+    \item chaque transaction est conservée dans l'historique du compte.
+\end{itemize}
+
+\section{Limites actuelles}
+
+Cette version JavaScript présente les limites suivantes :
+
+\begin{itemize}
+    \item il n'y a pas d'authentification ;
+    \item il n'y a pas de base de données ;
+    \item les données sont perdues à l'arrêt du serveur ;
+    \item il n'y a pas encore de virement entre comptes ;
+    \item il n'y a pas de gestion avancée des rôles.
+\end{itemize}
+
+\section{Conclusion}
+
+Cette API bancaire en JavaScript répond aux besoins de base d'un système de transaction bancaire académique. Elle permet la création de comptes, la consultation des comptes, les dépôts, les retraits et l'affichage des transactions. Elle constitue une base simple pour une amélioration future vers une application bancaire plus complète.
+
+\end{document}

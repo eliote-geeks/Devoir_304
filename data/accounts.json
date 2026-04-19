@@ -1,0 +1,39 @@
+{
+  "accounts": [
+    {
+      "id": "489af900-d36d-49dc-9c95-ac5bd95dc62a",
+      "account_number": "ACC-20260415-8154B28E",
+      "full_name": "KOA ESSAMA PAULIN BRICE",
+      "phone_number": "699001122",
+      "email": "paulin@example.com",
+      "balance": 10000.0,
+      "created_at": "2026-04-15T15:58:06.606556Z",
+      "transactions": [
+        {
+          "transaction_id": "88844569-4d27-4688-b178-aee614268baa",
+          "transaction_type": "deposit",
+          "amount": 10000.0,
+          "description": "Solde initial",
+          "balance_after": 10000.0,
+          "created_at": "2026-04-15T15:58:06.606609Z"
+        },
+        {
+          "transaction_id": "441df396-86e5-4a88-bdd4-eb146fd8a577",
+          "transaction_type": "deposit",
+          "amount": 5000.0,
+          "description": "Depot agence",
+          "balance_after": 15000.0,
+          "created_at": "2026-04-15T15:59:05.274000Z"
+        },
+        {
+          "transaction_id": "c8ee9ffc-fded-4f48-8305-8f83f9d04b1e",
+          "transaction_type": "withdraw",
+          "amount": 5000.0,
+          "description": "Depot agence",
+          "balance_after": 10000.0,
+          "created_at": "2026-04-15T16:18:01.981908Z"
+        }
+      ]
+    }
+  ]
+}

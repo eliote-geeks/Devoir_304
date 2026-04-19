@@ -1,0 +1,342 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{verbatim}
+
+\geometry{margin=2.5cm}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue
+}
+
+\title{Cahier de Charges\\\large Système de transaction bancaire}
+\author{KOA ESSAMA PAULIN BRICE \\ Matricule : 25I2255}
+\date{Licence 3 ICT \\ Université de Yaoundé I}
+
+\begin{document}
+
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+    \centering
+    {\Large Université de Yaoundé I \par}
+    \vspace{0.5cm}
+    {\large Licence 3 ICT \par}
+    \vspace{2cm}
+    {\LARGE \textbf{Cahier de Charges} \par}
+    \vspace{0.5cm}
+    {\Large \textbf{Conception d'une API pour un système de transaction bancaire} \par}
+    \vspace{2cm}
+    \begin{tabular}{>{\bfseries}p{5cm}p{8cm}}
+        Étudiant : & KOA ESSAMA PAULIN BRICE \\
+        Matricule : & 25I2255 \\
+        Niveau : & Licence 3 ICT \\
+        Établissement : & Université de Yaoundé I \\
+    \end{tabular}
+    \vfill
+    {\large Année académique 2025--2026 \par}
+\end{titlepage}
+\hypersetup{pageanchor=true}
+
+\tableofcontents
+\newpage
+
+\section*{Informations de l'étudiant}
+\addcontentsline{toc}{section}{Informations de l'étudiant}
+
+\begin{itemize}
+    \item Nom et prénom : \textbf{KOA ESSAMA PAULIN BRICE}
+    \item Matricule : \textbf{25I2255}
+    \item Niveau : \textbf{Licence 3 ICT}
+    \item Établissement : \textbf{Université de Yaoundé I}
+    \item Intitulé du devoir : \textbf{Conception d'une API pour un système de transaction bancaire}
+\end{itemize}
+
+\section{Contexte}
+
+Les établissements financiers ont besoin de solutions numériques pour gérer les opérations de base des clients. Dans ce devoir, il s'agit de concevoir une API REST permettant de gérer des comptes bancaires et d'exécuter des opérations simples de transaction, notamment les dépôts et les retraits.
+
+Cette API constitue une base logicielle pouvant être intégrée plus tard à une application web, mobile ou desktop.
+
+\section{Besoin}
+
+Le système doit permettre :
+
+\begin{itemize}
+    \item d'enregistrer un nouveau client sous forme de compte bancaire ;
+    \item de consulter la liste des comptes créés ;
+    \item de consulter les informations d'un compte précis ;
+    \item d'effectuer un dépôt sur un compte ;
+    \item d'effectuer un retrait sur un compte ;
+    \item de conserver l'historique des transactions réalisées.
+\end{itemize}
+
+\section{Objectif général}
+
+Mettre en place une API REST sécurisée et simple à utiliser pour gérer des comptes bancaires et les opérations de transaction de base.
+
+\section{Objectifs spécifiques}
+
+\begin{itemize}
+    \item créer un compte bancaire ;
+    \item attribuer automatiquement un numéro de compte ;
+    \item afficher la liste de tous les comptes ;
+    \item afficher les détails d'un compte ;
+    \item enregistrer les dépôts ;
+    \item enregistrer les retraits ;
+    \item vérifier qu'un retrait ne dépasse pas le solde disponible ;
+    \item conserver les transactions dans une structure persistante.
+\end{itemize}
+
+\section{Acteurs}
+
+\subsection{Client}
+
+Le client représente l'utilisateur final du système bancaire. Il peut :
+
+\begin{itemize}
+    \item ouvrir un compte ;
+    \item consulter son compte ;
+    \item effectuer un dépôt ;
+    \item effectuer un retrait ;
+    \item consulter ses transactions.
+\end{itemize}
+
+\subsection{Administrateur système}
+
+L'administrateur supervise le bon fonctionnement de l'application. Il peut :
+
+\begin{itemize}
+    \item consulter la liste des comptes ;
+    \item suivre les transactions ;
+    \item maintenir le système.
+\end{itemize}
+
+\section{Cas d'utilisation}
+
+\subsection{Cas d'utilisation 1 : Créer un compte}
+
+\begin{itemize}
+    \item Acteur principal : Client
+    \item Description : le client fournit ses informations personnelles pour ouvrir un compte.
+    \item Résultat attendu : un compte est créé avec un identifiant unique et un numéro de compte.
+\end{itemize}
+
+\subsection{Cas d'utilisation 2 : Consulter la liste des comptes}
+
+\begin{itemize}
+    \item Acteur principal : Administrateur système
+    \item Description : le système affiche tous les comptes enregistrés.
+    \item Résultat attendu : la liste complète des comptes est retournée.
+\end{itemize}
+
+\subsection{Cas d'utilisation 3 : Consulter un compte}
+
+\begin{itemize}
+    \item Acteur principal : Client
+    \item Description : le client consulte les informations d'un compte donné.
+    \item Résultat attendu : les informations du compte sont affichées.
+\end{itemize}
+
+\subsection{Cas d'utilisation 4 : Effectuer un dépôt}
+
+\begin{itemize}
+    \item Acteur principal : Client
+    \item Description : le client ajoute de l'argent sur son compte.
+    \item Résultat attendu : le solde du compte est mis à jour et la transaction est enregistrée.
+\end{itemize}
+
+\subsection{Cas d'utilisation 5 : Effectuer un retrait}
+
+\begin{itemize}
+    \item Acteur principal : Client
+    \item Description : le client retire de l'argent de son compte.
+    \item Résultat attendu : si le solde est suffisant, le montant est retiré et la transaction est enregistrée.
+\end{itemize}
+
+\subsection{Cas d'utilisation 6 : Consulter les transactions}
+
+\begin{itemize}
+    \item Acteur principal : Client
+    \item Description : le client visualise l'historique de ses opérations.
+    \item Résultat attendu : toutes les transactions associées au compte sont affichées.
+\end{itemize}
+
+\section{Spécifications fonctionnelles}
+
+Le système doit :
+
+\begin{itemize}
+    \item permettre la création d'un compte avec nom complet, numéro de téléphone, email et solde initial ;
+    \item générer automatiquement un identifiant unique et un numéro de compte ;
+    \item stocker les informations des comptes ;
+    \item retourner la liste de tous les comptes créés ;
+    \item retourner les détails d'un compte par son identifiant ;
+    \item accepter un montant positif pour un dépôt ;
+    \item accepter un montant positif pour un retrait ;
+    \item refuser un retrait si le solde est insuffisant ;
+    \item enregistrer chaque transaction avec sa date, son type, son montant et le solde après opération.
+\end{itemize}
+
+\section{Spécifications non fonctionnelles}
+
+Le système doit respecter les contraintes suivantes :
+
+\begin{itemize}
+    \item \textbf{Performance} : la réponse de l'API doit être rapide pour les opérations simples.
+    \item \textbf{Fiabilité} : les données doivent être conservées dans un fichier JSON local.
+    \item \textbf{Maintenabilité} : le code doit être structuré de manière claire et modulaire.
+    \item \textbf{Évolutivité} : l'architecture doit permettre d'ajouter plus tard l'authentification, le virement et la suppression d'un compte.
+    \item \textbf{Sécurité} : les montants négatifs et les retraits non autorisés doivent être bloqués.
+    \item \textbf{Disponibilité} : l'API doit rester accessible tant que le serveur FastAPI est en cours d'exécution.
+\end{itemize}
+
+\section{Choix techniques}
+
+\begin{itemize}
+    \item Architecture : API REST
+    \item Langage : Python
+    \item Framework : FastAPI
+    \item Serveur d'exécution : Uvicorn
+    \item Persistance : fichier JSON local
+    \item Format d'échange : JSON
+\end{itemize}
+
+\section{Description des ressources de l'API}
+
+\subsection{Créer un compte}
+
+\begin{itemize}
+    \item Méthode : \texttt{POST}
+    \item URL : \texttt{/accounts}
+\end{itemize}
+
+\textbf{Corps de la requête}
+
+\begin{verbatim}
+{
+  "full_name": "KOA ESSAMA PAULIN BRICE",
+  "phone_number": "699001122",
+  "email": "paulin@example.com",
+  "initial_balance": 10000
+}
+\end{verbatim}
+
+\textbf{Réponse attendue}
+
+\begin{verbatim}
+{
+  "id": "uuid-du-compte",
+  "account_number": "ACC-20260415-AB12CD34",
+  "full_name": "KOA ESSAMA PAULIN BRICE",
+  "phone_number": "699001122",
+  "email": "paulin@example.com",
+  "balance": 10000,
+  "created_at": "2026-04-15T15:00:00Z"
+}
+\end{verbatim}
+
+\subsection{Lister les comptes}
+
+\begin{itemize}
+    \item Méthode : \texttt{GET}
+    \item URL : \texttt{/accounts}
+\end{itemize}
+
+\textbf{Réponse attendue}
+
+\begin{verbatim}
+[
+  {
+    "id": "uuid-du-compte",
+    "account_number": "ACC-20260415-AB12CD34",
+    "full_name": "KOA ESSAMA PAULIN BRICE",
+    "phone_number": "699001122",
+    "email": "paulin@example.com",
+    "balance": 10000,
+    "created_at": "2026-04-15T15:00:00Z"
+  }
+]
+\end{verbatim}
+
+\subsection{Consulter un compte}
+
+\begin{itemize}
+    \item Méthode : \texttt{GET}
+    \item URL : \texttt{/accounts/\{account\_id\}}
+\end{itemize}
+
+\subsection{Faire un dépôt}
+
+\begin{itemize}
+    \item Méthode : \texttt{POST}
+    \item URL : \texttt{/accounts/\{account\_id\}/deposit}
+\end{itemize}
+
+\textbf{Corps de la requête}
+
+\begin{verbatim}
+{
+  "amount": 5000,
+  "description": "Depot agence"
+}
+\end{verbatim}
+
+\subsection{Faire un retrait}
+
+\begin{itemize}
+    \item Méthode : \texttt{POST}
+    \item URL : \texttt{/accounts/\{account\_id\}/withdraw}
+\end{itemize}
+
+\textbf{Corps de la requête}
+
+\begin{verbatim}
+{
+  "amount": 2000,
+  "description": "Retrait DAB"
+}
+\end{verbatim}
+
+\subsection{Lister les transactions d'un compte}
+
+\begin{itemize}
+    \item Méthode : \texttt{GET}
+    \item URL : \texttt{/accounts/\{account\_id\}/transactions}
+\end{itemize}
+
+\section{Règles de gestion}
+
+\begin{itemize}
+    \item un compte possède un identifiant unique ;
+    \item un compte possède un numéro de compte unique ;
+    \item le solde initial doit être supérieur ou égal à zéro ;
+    \item un dépôt doit obligatoirement avoir un montant strictement positif ;
+    \item un retrait doit obligatoirement avoir un montant strictement positif ;
+    \item un retrait est refusé si le solde du compte est insuffisant ;
+    \item chaque opération modifie immédiatement le solde du compte ;
+    \item chaque opération est enregistrée dans l'historique du compte.
+\end{itemize}
+
+\section{Limites actuelles du projet}
+
+Cette première version est volontairement simple :
+
+\begin{itemize}
+    \item il n'y a pas encore d'authentification ;
+    \item il n'y a pas encore de base de données relationnelle ;
+    \item il n'y a pas encore de virement entre comptes ;
+    \item les rôles client et administrateur ne sont pas encore séparés par un mécanisme d'accès.
+\end{itemize}
+
+\section{Conclusion}
+
+Ce projet répond au besoin de base d'un système de transaction bancaire académique. Il permet de créer des comptes, de les consulter, de gérer les dépôts et les retraits, et de garder une trace des opérations. Il constitue une bonne fondation pour une évolution vers un système bancaire plus complet.
+
+\end{document}
