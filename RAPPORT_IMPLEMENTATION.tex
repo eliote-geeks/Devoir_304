@@ -1,0 +1,1048 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{mdframed}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% ---- Couleurs ----
+\definecolor{primary}{RGB}{26, 86, 219}
+\definecolor{secondary}{RGB}{30, 64, 175}
+\definecolor{success}{RGB}{5, 150, 105}
+\definecolor{danger}{RGB}{220, 38, 38}
+\definecolor{warning}{RGB}{217, 119, 6}
+\definecolor{codebg}{RGB}{245, 247, 250}
+\definecolor{codeborder}{RGB}{203, 213, 225}
+\definecolor{codecomment}{RGB}{107, 114, 128}
+\definecolor{codestring}{RGB}{5, 150, 105}
+\definecolor{codekeyword}{RGB}{99, 102, 241}
+\definecolor{lightblue}{RGB}{239, 246, 255}
+\definecolor{lightgreen}{RGB}{236, 253, 245}
+\definecolor{lightred}{RGB}{254, 242, 242}
+
+% ---- Style des listings ----
+\lstdefinestyle{python}{
+  language=Python,
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{codekeyword}\bfseries,
+  commentstyle=\color{codecomment}\itshape,
+  stringstyle=\color{codestring},
+  numberstyle=\tiny\color{codecomment},
+  numbers=left,
+  stepnumber=1,
+  numbersep=8pt,
+  frame=single,
+  rulecolor=\color{codeborder},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4,
+  showstringspaces=false,
+  xleftmargin=15pt,
+  xrightmargin=5pt,
+  captionpos=b,
+}
+
+\lstdefinestyle{json}{
+  language=,
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{codekeyword},
+  stringstyle=\color{codestring},
+  frame=single,
+  rulecolor=\color{codeborder},
+  breaklines=true,
+  tabsize=2,
+  showstringspaces=false,
+  xleftmargin=15pt,
+  captionpos=b,
+}
+
+\lstdefinestyle{bash}{
+  language=bash,
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\footnotesize\color{white},
+  backgroundcolor=\color[RGB]{30,41,59},
+  keywordstyle=\color[RGB]{129,230,217},
+  stringstyle=\color[RGB]{167,243,208},
+  commentstyle=\color[RGB]{107,114,128}\itshape,
+  frame=single,
+  rulecolor=\color[RGB]{51,65,85},
+  breaklines=true,
+  tabsize=2,
+  showstringspaces=false,
+  xleftmargin=15pt,
+  captionpos=b,
+}
+
+% ---- En-tête et pied de page ----
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{primary}{\textbf{Devoir 304 — API de transaction bancaire}}}
+\fancyhead[R]{\small\textcolor{codecomment}{KOA ESSAMA PAULIN BRICE}}
+\fancyfoot[C]{\small\textcolor{codecomment}{\thepage}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.5pt}
+
+% ---- Titres ----
+\titleformat{\section}{\Large\bfseries\color{primary}}{}{0em}{\thesection\quad}[\titlerule]
+\titleformat{\subsection}{\large\bfseries\color{secondary}}{}{0em}{\thesubsection\quad}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{secondary}}{}{0em}{\thesubsubsection\quad}
+
+% ---- Boîtes colorées ----
+\newmdenv[
+  backgroundcolor=lightblue,
+  linecolor=primary,
+  linewidth=2pt,
+  leftline=true, rightline=false, topline=false, bottomline=false,
+  innerleftmargin=10pt,
+  innerrightmargin=10pt,
+  innertopmargin=8pt,
+  innerbottommargin=8pt,
+]{infobox}
+
+\newmdenv[
+  backgroundcolor=lightgreen,
+  linecolor=success,
+  linewidth=2pt,
+  leftline=true, rightline=false, topline=false, bottomline=false,
+  innerleftmargin=10pt,
+  innerrightmargin=10pt,
+  innertopmargin=8pt,
+  innerbottommargin=8pt,
+]{successbox}
+
+\newmdenv[
+  backgroundcolor=lightred,
+  linecolor=danger,
+  linewidth=2pt,
+  leftline=true, rightline=false, topline=false, bottomline=false,
+  innerleftmargin=10pt,
+  innerrightmargin=10pt,
+  innertopmargin=8pt,
+  innerbottommargin=8pt,
+]{dangerbox}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=primary,
+  urlcolor=primary,
+  pdftitle={Rapport d'implementation - API Bancaire},
+  pdfauthor={KOA ESSAMA PAULIN BRICE},
+}
+
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+
+% =========================================================
+\begin{document}
+% =========================================================
+
+% ---- Page de garde ----
+\begin{titlepage}
+\centering
+\vspace*{1cm}
+
+{\Large\bfseries UNIVERSITÉ DE YAOUNDÉ I\\[0.3cm]}
+{\large Faculté des Sciences\\[0.1cm]}
+{\large Département d'Informatique\\[2cm]}
+
+\noindent\rule{\linewidth}{2pt}\\[0.5cm]
+{\Huge\bfseries\color{primary} Rapport d'Implémentation}\\[0.3cm]
+{\LARGE\bfseries API de Transaction Bancaire}\\[0.3cm]
+{\large Devoir 304 — Conception d'API REST}\\[0.3cm]
+\noindent\rule{\linewidth}{2pt}\\[2cm]
+
+\begin{tabular}{ll}
+\textbf{Étudiant :} & KOA ESSAMA PAULIN BRICE \\[0.3cm]
+\textbf{Matricule :} & 25I2255 \\[0.3cm]
+\textbf{Niveau :} & Licence 3 ICT \\[0.3cm]
+\textbf{Établissement :} & Université de Yaoundé I \\[0.3cm]
+\textbf{Dépôt GitHub :} & \url{https://github.com/eliote-geeks/Devoir_304} \\[0.3cm]
+\textbf{Date :} & Avril 2026 \\
+\end{tabular}
+
+\vfill
+{\large\textit{«~Conception et implémentation d'une API REST pour la gestion\\de comptes bancaires, de dépôts et de retraits.~»}}
+
+\end{titlepage}
+
+% ---- Table des matières ----
+\tableofcontents
+\newpage
+
+% =========================================================
+\section{Introduction et contexte}
+% =========================================================
+
+\subsection{Contexte du projet}
+
+Ce rapport décrit de façon complète et détaillée l'implémentation d'une \textbf{API REST de transaction bancaire} réalisée dans le cadre du Devoir 304 de Licence 3 ICT.
+
+L'objectif est de concevoir un système permettant à des clients de gérer leurs comptes bancaires numériquement : créer un compte, consulter son solde, effectuer des dépôts et des retraits, et visualiser l'historique de leurs opérations.
+
+\subsection{Problème résolu}
+
+Les établissements financiers ont besoin de solutions numériques pour gérer les opérations de base. Cette API constitue le back-end (côté serveur) d'un tel système, pouvant être consommée par une application web, mobile ou desktop.
+
+\subsection{Choix technologiques}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Composant} & \textbf{Technologie} & \textbf{Raison du choix} \\
+\midrule
+Langage & Python 3.13 & Lisible, productif, écosystème riche \\
+Framework & FastAPI & Moderne, rapide, génère Swagger automatiquement \\
+Serveur & Uvicorn & Serveur ASGI haute performance \\
+Persistance & Fichier JSON local & Simple, portable, sans dépendance externe \\
+Documentation & Swagger UI (OpenAPI 3.0) & Standard industriel, interactif \\
+Validation & Pydantic v2 & Validation automatique des données entrantes \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% =========================================================
+\section{Architecture du projet}
+% =========================================================
+
+\subsection{Structure des fichiers}
+
+\begin{lstlisting}[style=bash, caption={Arborescence du projet}]
+Devoir_304/
+|
+|-- app/                      # Package principal de l'API
+|   |-- __init__.py           # Marque app/ comme package Python
+|   |-- main.py               # Serveur FastAPI : routes et logique HTTP
+|   |-- models.py             # Schemas de validation (Pydantic)
+|   |-- storage.py            # Persistance : lecture/ecriture JSON
+|   |-- static/               # Fichiers statiques (Swagger UI)
+|       |-- swagger-ui/
+|           |-- swagger-ui-bundle.js
+|           |-- swagger-ui.css
+|           |-- favicon.svg
+|
+|-- data/
+|   |-- accounts.json         # Base de donnees locale (fichier JSON)
+|
+|-- requirements.txt          # Dependances Python
+|-- render.yaml               # Configuration deploiement Render
+|-- CAHIER_DE_CHARGES.md      # Cahier des charges complet
+\end{lstlisting}
+
+\subsection{Architecture en couches}
+
+L'API est organisée en \textbf{3 couches} distinctes, selon le principe de séparation des responsabilités :
+
+\begin{center}
+\begin{tabular}{clp{8cm}}
+\toprule
+\textbf{Couche} & \textbf{Fichier} & \textbf{Rôle} \\
+\midrule
+\textbf{Présentation} & \texttt{main.py} & Définit les routes HTTP, reçoit les requêtes, retourne les réponses JSON \\
+\textbf{Modèle} & \texttt{models.py} & Définit les structures de données et règles de validation \\
+\textbf{Données} & \texttt{storage.py} & Gère la lecture et l'écriture dans le fichier \texttt{accounts.json} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{infobox}
+\textbf{Pourquoi cette séparation ?} Elle permet de modifier chaque couche indépendamment. Par exemple, on pourrait remplacer le fichier JSON par une vraie base de données (PostgreSQL) en modifiant uniquement \texttt{storage.py}, sans toucher aux routes ni aux modèles.
+\end{infobox}
+
+% =========================================================
+\section{Spécifications fonctionnelles}
+% =========================================================
+
+\subsection{Acteurs du système}
+
+\textbf{Client bancaire} : l'utilisateur final qui interagit avec le système. Il peut :
+\begin{itemize}[noitemsep]
+  \item ouvrir un compte bancaire
+  \item consulter les informations de son compte
+  \item effectuer des dépôts
+  \item effectuer des retraits
+  \item consulter son historique de transactions
+\end{itemize}
+
+\textbf{Administrateur système} : supervise le système. Il peut :
+\begin{itemize}[noitemsep]
+  \item consulter la liste complète des comptes
+  \item suivre les transactions
+\end{itemize}
+
+\subsection{Les 5 fonctions du système}
+
+\begin{center}
+\begin{tabular}{clll}
+\toprule
+\textbf{\#} & \textbf{Fonction} & \textbf{Méthode HTTP} & \textbf{URL} \\
+\midrule
+F1 & Créer un compte & POST & \texttt{/accounts} \\
+F2 & Lister les comptes & GET & \texttt{/accounts} \\
+F3 & Consulter un compte & GET & \texttt{/accounts/\{id\}} \\
+F4 & Effectuer un dépôt & POST & \texttt{/accounts/\{id\}/deposit} \\
+F5 & Effectuer un retrait & POST & \texttt{/accounts/\{id\}/withdraw} \\
+F+ & Historique des transactions & GET & \texttt{/accounts/\{id\}/transactions} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Règles de gestion}
+
+\begin{enumerate}[noitemsep]
+  \item Un compte possède un identifiant unique (UUID généré automatiquement)
+  \item Un compte possède un numéro de compte unique au format \texttt{ACC-AAAAMMJJ-XXXXXXXX}
+  \item Le solde initial doit être supérieur ou égal à zéro
+  \item Un dépôt doit obligatoirement avoir un montant strictement positif
+  \item Un retrait doit obligatoirement avoir un montant strictement positif
+  \item Un retrait est refusé si le solde du compte est insuffisant
+  \item Chaque opération modifie immédiatement et définitivement le solde
+  \item Chaque opération est enregistrée dans l'historique avec sa date et le solde après
+\end{enumerate}
+
+% =========================================================
+\section{Spécifications non fonctionnelles}
+% =========================================================
+
+\begin{center}
+\begin{tabular}{lp{4.5cm}p{6cm}}
+\toprule
+\textbf{Critère} & \textbf{Exigence} & \textbf{Comment c'est respecté} \\
+\midrule
+Performance & Réponses rapides & FastAPI + Uvicorn (ASGI asynchrone), pas de base de données distante \\
+Fiabilité & Données persistées & Fichier \texttt{accounts.json} protégé par un verrou \texttt{threading.Lock} \\
+Sécurité & Montants invalides bloqués & Pydantic valide \texttt{gt=0} et \texttt{ge=0} avant tout traitement \\
+Maintenabilité & Code modulaire & 3 fichiers avec rôles clairs (\texttt{main}, \texttt{models}, \texttt{storage}) \\
+Évolutivité & Extensible & Architecture prête pour authentification JWT, virements, base SQL \\
+Disponibilité & API accessible & Fonctionne tant que le serveur Uvicorn est actif \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% =========================================================
+\section{Implémentation détaillée — fichier par fichier}
+% =========================================================
+
+\subsection{\texttt{models.py} — Définition des structures de données}
+
+Ce fichier définit tous les \textbf{schémas de données} utilisés par l'API. Chaque classe hérite de \texttt{BaseModel} de Pydantic, ce qui permet la validation automatique des données entrantes.
+
+\subsubsection{AccountCreate — Données pour créer un compte}
+
+\begin{lstlisting}[style=python, caption={models.py — AccountCreate}]
+class AccountCreate(BaseModel):
+    full_name: str = Field(
+        ...,            # champ obligatoire (les ... signifient "requis")
+        min_length=3,   # au moins 3 caracteres
+        max_length=120,
+        description="Nom complet du titulaire du compte.",
+        examples=["KOA ESSAMA PAULIN BRICE"],
+    )
+    phone_number: str = Field(
+        ...,            # champ obligatoire
+        min_length=6,
+        max_length=20,
+        description="Numero de telephone du client.",
+        examples=["699001122"],
+    )
+    email: str | None = Field(
+        default=None,   # optionnel : si absent, vaut None
+        max_length=120,
+        description="Adresse email du client.",
+        examples=["paulin@example.com"],
+    )
+    initial_balance: float = Field(
+        default=0,      # optionnel : defaut = 0
+        ge=0,           # ge = "greater or equal" : interdit les negatifs
+        description="Solde initial. Doit etre superieur ou egal a zero.",
+        examples=[10000],
+    )
+\end{lstlisting}
+
+\begin{infobox}
+\textbf{Comment Pydantic fonctionne :} Quand une requête POST arrive avec un corps JSON, Pydantic lit automatiquement les champs, vérifie les contraintes (\texttt{min\_length}, \texttt{ge}, etc.) et retourne une erreur HTTP 422 si les données sont invalides — sans que le développeur écrive une seule ligne de validation.
+\end{infobox}
+
+\subsubsection{TransactionRequest — Données pour un dépôt ou retrait}
+
+\begin{lstlisting}[style=python, caption={models.py — TransactionRequest}]
+class TransactionRequest(BaseModel):
+    amount: float = Field(
+        ...,    # obligatoire
+        gt=0,   # gt = "greater than" : strictement positif
+        description="Montant de l'operation. Doit etre strictement positif.",
+        examples=[5000],
+    )
+    description: str | None = Field(
+        default=None,   # optionnel : libelle de l'operation
+        max_length=150,
+        description="Libelle ou motif de la transaction.",
+        examples=["Depot agence"],
+    )
+\end{lstlisting}
+
+\subsubsection{Autres modèles — Réponses de l'API}
+
+\begin{lstlisting}[style=python, caption={models.py — Modeles de reponse}]
+class AccountResponse(BaseModel):
+    id: str                   # UUID du compte
+    account_number: str       # ex: ACC-20260422-A1B2C3D4
+    full_name: str
+    phone_number: str
+    email: str | None
+    balance: float            # solde courant
+    created_at: str           # date ISO 8601
+
+class TransactionResponse(BaseModel):
+    transaction_id: str
+    transaction_type: Literal["deposit", "withdraw"]
+    amount: float
+    description: str | None
+    balance_after: float      # solde apres l'operation
+    created_at: str
+
+class AccountDetails(AccountResponse):
+    # Herite de AccountResponse et ajoute les transactions
+    transactions: list[TransactionResponse] = Field(default_factory=list)
+
+class ErrorResponse(BaseModel):
+    detail: str               # Message d'erreur retourne par l'API
+\end{lstlisting}
+
+% -------------------------------------------------------
+\subsection{\texttt{storage.py} — Persistance des données}
+% -------------------------------------------------------
+
+Ce fichier gère toute la \textbf{lecture et écriture des données} dans le fichier JSON local.
+
+\subsubsection{Configuration et utilitaires}
+
+\begin{lstlisting}[style=python, caption={storage.py — Configuration}]
+import json
+from pathlib import Path
+from threading import Lock    # protege les ecritures concurrentes
+from uuid import uuid4
+from datetime import datetime, UTC
+
+BASE_DIR = Path(__file__).resolve().parent.parent   # racine du projet
+DATA_FILE = BASE_DIR / "data" / "accounts.json"    # chemin du fichier JSON
+FILE_LOCK = Lock()    # verrou pour empecher 2 ecritures simultanees
+
+def _now() -> str:
+    # Retourne la date/heure actuelle au format ISO 8601
+    # Ex: "2026-04-22T14:30:00Z"
+    return datetime.now(UTC).isoformat().replace("+00:00", "Z")
+
+def _generate_account_number() -> str:
+    # Genere un numero de compte unique
+    # Ex: "ACC-20260422-A1B2C3D4"
+    date_part = datetime.now(UTC).strftime("%Y%m%d")
+    random_part = uuid4().hex[:8].upper()   # 8 caracteres aleatoires
+    return f"ACC-{date_part}-{random_part}"
+\end{lstlisting}
+
+\subsubsection{Initialisation et lecture/écriture}
+
+\begin{lstlisting}[style=python, caption={storage.py — Lecture et ecriture}]
+def initialize_storage() -> None:
+    # Cree le dossier data/ et le fichier accounts.json s'ils n'existent pas
+    DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
+    if not DATA_FILE.exists():
+        DATA_FILE.write_text(
+            json.dumps({"accounts": []}, indent=2),
+            encoding="utf-8"
+        )
+
+def _read_data() -> dict:
+    # Lit et desserialise le fichier JSON
+    initialize_storage()    # s'assure que le fichier existe
+    return json.loads(DATA_FILE.read_text(encoding="utf-8"))
+
+def _write_data(data: dict) -> None:
+    # Serialise et ecrit les donnees dans le fichier JSON
+    DATA_FILE.write_text(json.dumps(data, indent=2), encoding="utf-8")
+\end{lstlisting}
+
+\begin{infobox}
+\textbf{Structure du fichier \texttt{accounts.json} :}\\
+Le fichier contient un objet JSON avec une clé \texttt{"accounts"} dont la valeur est un tableau de tous les comptes. Chaque compte contient ses transactions intégrées directement.
+\end{infobox}
+
+\begin{lstlisting}[style=json, caption={Exemple de contenu de accounts.json}]
+{
+  "accounts": [
+    {
+      "id": "a3f1b2c4-...",
+      "account_number": "ACC-20260422-A1B2C3D4",
+      "full_name": "KOA ESSAMA PAULIN BRICE",
+      "phone_number": "699001122",
+      "email": "paulin@example.com",
+      "balance": 8000.0,
+      "created_at": "2026-04-22T10:00:00Z",
+      "transactions": [
+        {
+          "transaction_id": "f1e2d3c4-...",
+          "transaction_type": "deposit",
+          "amount": 10000.0,
+          "description": "Solde initial",
+          "balance_after": 10000.0,
+          "created_at": "2026-04-22T10:00:00Z"
+        },
+        {
+          "transaction_id": "b5a6c7d8-...",
+          "transaction_type": "withdraw",
+          "amount": 2000.0,
+          "description": "Retrait DAB",
+          "balance_after": 8000.0,
+          "created_at": "2026-04-22T11:30:00Z"
+        }
+      ]
+    }
+  ]
+}
+\end{lstlisting}
+
+\subsubsection{Création d'un compte}
+
+\begin{lstlisting}[style=python, caption={storage.py — create\_account()}]
+def create_account(payload: dict) -> dict:
+    with FILE_LOCK:     # verrou : une seule operation d'ecriture a la fois
+        data = _read_data()
+
+        account = {
+            "id": str(uuid4()),                      # UUID unique
+            "account_number": _generate_account_number(),
+            "full_name": payload["full_name"],
+            "phone_number": payload["phone_number"],
+            "email": payload.get("email"),           # None si absent
+            "balance": round(float(payload.get("initial_balance", 0)), 2),
+            "created_at": _now(),
+            "transactions": [],                      # liste vide au depart
+        }
+
+        # Si un solde initial est fourni, on cree une premiere transaction
+        if account["balance"] > 0:
+            account["transactions"].append({
+                "transaction_id": str(uuid4()),
+                "transaction_type": "deposit",
+                "amount": account["balance"],
+                "description": "Solde initial",
+                "balance_after": account["balance"],
+                "created_at": _now(),
+            })
+
+        data["accounts"].append(account)    # ajout dans la liste
+        _write_data(data)                   # sauvegarde dans le fichier
+        return account
+\end{lstlisting}
+
+\subsubsection{Application d'une transaction (dépôt ou retrait)}
+
+\begin{lstlisting}[style=python, caption={storage.py — apply\_transaction()}]
+def apply_transaction(
+    account_id: str,
+    transaction_type: str,   # "deposit" ou "withdraw"
+    amount: float,
+    description: str | None
+) -> dict | None:
+
+    with FILE_LOCK:     # verrou pour l'ecriture atomique
+        data = _read_data()
+
+        for account in data["accounts"]:
+            if account["id"] != account_id:
+                continue    # passe au compte suivant si ce n'est pas le bon
+
+            current_balance = float(account["balance"])
+            amount = round(float(amount), 2)
+
+            # Verification du solde avant un retrait
+            if transaction_type == "withdraw" and amount > current_balance:
+                raise ValueError("Solde insuffisant pour effectuer ce retrait.")
+
+            # Calcul du nouveau solde
+            if transaction_type == "deposit":
+                new_balance = round(current_balance + amount, 2)
+            else:
+                new_balance = round(current_balance - amount, 2)
+
+            # Creation de la transaction
+            transaction = {
+                "transaction_id": str(uuid4()),
+                "transaction_type": transaction_type,
+                "amount": amount,
+                "description": description,
+                "balance_after": new_balance,
+                "created_at": _now(),
+            }
+
+            account["balance"] = new_balance            # mise a jour du solde
+            account["transactions"].append(transaction) # ajout dans l'historique
+            _write_data(data)                           # sauvegarde
+            return account
+
+        return None     # compte non trouve
+\end{lstlisting}
+
+% -------------------------------------------------------
+\subsection{\texttt{main.py} — Les routes de l'API}
+% -------------------------------------------------------
+
+Ce fichier est le cœur de l'API. Il définit toutes les \textbf{routes HTTP} et orchestre les appels aux autres modules.
+
+\subsubsection{Initialisation de FastAPI}
+
+\begin{lstlisting}[style=python, caption={main.py — Initialisation de l'application}]
+from fastapi import FastAPI, HTTPException, status
+from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.staticfiles import StaticFiles
+
+app = FastAPI(
+    title="API de transaction bancaire",
+    description="...",   # description longue visible dans Swagger
+    version="1.0.0",
+    docs_url=None,       # on desactive la route /docs par defaut
+    redoc_url=None,      # pour utiliser notre propre Swagger UI local
+    openapi_tags=[
+        {"name": "General", "description": "Informations generales."},
+        {"name": "Accounts", "description": "Gestion des comptes."},
+        {"name": "Transactions", "description": "Depots et retraits."},
+    ],
+)
+
+# Sert les fichiers du dossier app/static/ a l'URL /static/
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
+@app.on_event("startup")
+def startup() -> None:
+    initialize_storage()    # cree le fichier JSON au demarrage si besoin
+\end{lstlisting}
+
+\subsubsection{Fonction 1 — Créer un compte}
+
+\begin{lstlisting}[style=python, caption={main.py — POST /accounts}]
+@app.post(
+    "/accounts",
+    response_model=AccountResponse,
+    status_code=status.HTTP_201_CREATED,   # HTTP 201 Created (pas 200)
+    tags=["Accounts"],
+    summary="Creer un compte bancaire",
+)
+def create_bank_account(payload: AccountCreate) -> dict:
+    # FastAPI injecte automatiquement payload apres validation Pydantic
+    account = create_account(payload.model_dump())   # cree et persiste
+    # On retourne le compte sans la liste de transactions
+    return {key: value for key, value in account.items() if key != "transactions"}
+\end{lstlisting}
+
+\textbf{Ce qui se passe étape par étape :}
+\begin{enumerate}[noitemsep]
+  \item Le client envoie un POST avec un corps JSON
+  \item FastAPI lit le corps et le passe à Pydantic (\texttt{AccountCreate})
+  \item Pydantic vérifie les contraintes (champs obligatoires, longueurs, \texttt{ge=0})
+  \item Si invalide → FastAPI retourne automatiquement HTTP 422 avec le détail
+  \item Si valide → \texttt{create\_account()} est appelé, le compte est créé et sauvegardé
+  \item La réponse HTTP 201 est retournée avec les données du nouveau compte
+\end{enumerate}
+
+\subsubsection{Fonction 2 — Lister les comptes}
+
+\begin{lstlisting}[style=python, caption={main.py — GET /accounts}]
+@app.get(
+    "/accounts",
+    response_model=list[AccountResponse],   # liste de comptes en reponse
+    tags=["Accounts"],
+    summary="Lister tous les comptes",
+)
+def get_accounts() -> list[dict]:
+    accounts = list_accounts()    # lit tous les comptes depuis le fichier JSON
+    # Retourne chaque compte sans ses transactions (pour alleges la reponse)
+    return [
+        {key: value for key, value in account.items() if key != "transactions"}
+        for account in accounts
+    ]
+\end{lstlisting}
+
+\subsubsection{Fonction 3 — Consulter un compte}
+
+\begin{lstlisting}[style=python, caption={main.py — GET /accounts/\{account\_id\}}]
+@app.get(
+    "/accounts/{account_id}",   # {account_id} est un parametre de chemin
+    response_model=AccountDetails,  # inclut les transactions
+    tags=["Accounts"],
+    summary="Consulter un compte",
+    responses={404: {"model": ErrorResponse}},
+)
+def get_account_by_id(account_id: str) -> dict:
+    account = get_account(account_id)   # cherche dans le fichier JSON
+    if not account:
+        # Lance une exception HTTP 404 si le compte n'existe pas
+        raise HTTPException(status_code=404, detail="Compte introuvable.")
+    return account   # retourne le compte avec ses transactions
+\end{lstlisting}
+
+\subsubsection{Fonction 4 — Effectuer un dépôt}
+
+\begin{lstlisting}[style=python, caption={main.py — POST /accounts/\{account\_id\}/deposit}]
+@app.post(
+    "/accounts/{account_id}/deposit",
+    response_model=AccountDetails,
+    tags=["Transactions"],
+    summary="Effectuer un depot",
+    responses={
+        404: {"model": ErrorResponse, "description": "Compte introuvable."},
+    },
+)
+def deposit_money(account_id: str, payload: TransactionRequest) -> dict:
+    # Appelle apply_transaction avec type "deposit"
+    updated_account = apply_transaction(
+        account_id=account_id,
+        transaction_type="deposit",
+        amount=payload.amount,
+        description=payload.description,
+    )
+    if not updated_account:
+        # apply_transaction retourne None si le compte n'existe pas
+        raise HTTPException(status_code=404, detail="Compte introuvable.")
+    return updated_account   # retourne le compte mis a jour
+\end{lstlisting}
+
+\subsubsection{Fonction 5 — Effectuer un retrait}
+
+\begin{lstlisting}[style=python, caption={main.py — POST /accounts/\{account\_id\}/withdraw}]
+@app.post(
+    "/accounts/{account_id}/withdraw",
+    response_model=AccountDetails,
+    tags=["Transactions"],
+    summary="Effectuer un retrait",
+    responses={
+        400: {"model": ErrorResponse, "description": "Solde insuffisant."},
+        404: {"model": ErrorResponse, "description": "Compte introuvable."},
+    },
+)
+def withdraw_money(account_id: str, payload: TransactionRequest) -> dict:
+    try:
+        updated_account = apply_transaction(
+            account_id=account_id,
+            transaction_type="withdraw",
+            amount=payload.amount,
+            description=payload.description,
+        )
+    except ValueError as error:
+        # apply_transaction leve ValueError si solde insuffisant
+        # On la convertit en erreur HTTP 400
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+    if not updated_account:
+        raise HTTPException(status_code=404, detail="Compte introuvable.")
+    return updated_account
+\end{lstlisting}
+
+% =========================================================
+\section{Cas de test}
+% =========================================================
+
+\subsection{Tableau complet des 23 cas de test}
+
+\begin{longtable}{clp{3.5cm}p{3cm}c}
+\toprule
+\textbf{ID} & \textbf{Fonction} & \textbf{Description} & \textbf{Résultat attendu} & \textbf{Code HTTP} \\
+\midrule
+\endhead
+CT-01 & Créer compte & Tous les champs fournis & Compte créé avec ID et numéro & 201 \\
+CT-02 & Créer compte & Sans email ni solde initial & Compte créé, balance = 0 & 201 \\
+CT-03 & Créer compte & \texttt{full\_name} absent & Erreur de validation & 422 \\
+CT-04 & Créer compte & \texttt{phone\_number} absent & Erreur de validation & 422 \\
+CT-05 & Créer compte & Solde initial négatif & Erreur de validation & 422 \\
+\midrule
+CT-06 & Lister comptes & Aucun compte créé & Tableau vide \texttt{[]} & 200 \\
+CT-07 & Lister comptes & Comptes existants & Liste des comptes & 200 \\
+\midrule
+CT-08 & Consulter compte & ID valide & Détails + transactions & 200 \\
+CT-09 & Consulter compte & ID invalide & Compte introuvable & 404 \\
+\midrule
+CT-10 & Dépôt & Montant valide & Solde augmente & 200 \\
+CT-11 & Dépôt & Avec description & Libellé visible & 200 \\
+CT-12 & Dépôt & Montant = 0 & Erreur validation & 422 \\
+CT-13 & Dépôt & Montant négatif & Erreur validation & 422 \\
+CT-14 & Dépôt & Compte inexistant & Compte introuvable & 404 \\
+\midrule
+CT-15 & Retrait & Solde suffisant & Solde diminue & 200 \\
+CT-16 & Retrait & Montant = solde & Solde = 0 & 200 \\
+CT-17 & Retrait & Solde insuffisant & Solde insuffisant & 400 \\
+CT-18 & Retrait & Montant = 0 & Erreur validation & 422 \\
+CT-19 & Retrait & Montant négatif & Erreur validation & 422 \\
+CT-20 & Retrait & Compte inexistant & Compte introuvable & 404 \\
+\midrule
+CT-21 & Transactions & Compte sans opération & Tableau vide & 200 \\
+CT-22 & Transactions & Avec opérations & Liste chronologique & 200 \\
+CT-23 & Transactions & Compte inexistant & Compte introuvable & 404 \\
+\bottomrule
+\end{longtable}
+
+\subsection{Test manuel détaillé — Scénario complet}
+
+Le test manuel se fait directement dans \textbf{Swagger UI} accessible à \texttt{http://localhost:8000/docs}.
+
+\subsubsection{Étape 1 — Vérifier la liste vide (CT-06)}
+
+\begin{lstlisting}[style=bash, caption={Appel GET /accounts}]
+GET http://localhost:8000/accounts
+\end{lstlisting}
+
+\begin{successbox}
+\textbf{Résultat attendu :} HTTP 200 avec le corps \texttt{[]}\\
+Cela confirme que la persistance est initialisée et que le système fonctionne.
+\end{successbox}
+
+\subsubsection{Étape 2 — Créer un compte (CT-01)}
+
+\begin{lstlisting}[style=bash, caption={Appel POST /accounts}]
+POST http://localhost:8000/accounts
+Content-Type: application/json
+
+{
+  "full_name": "KOA ESSAMA PAULIN BRICE",
+  "phone_number": "699001122",
+  "email": "paulin@example.com",
+  "initial_balance": 10000
+}
+\end{lstlisting}
+
+\begin{lstlisting}[style=json, caption={Reponse attendue — HTTP 201}]
+{
+  "id": "a3f1b2c4-d5e6-7890-abcd-ef1234567890",
+  "account_number": "ACC-20260422-A1B2C3D4",
+  "full_name": "KOA ESSAMA PAULIN BRICE",
+  "phone_number": "699001122",
+  "email": "paulin@example.com",
+  "balance": 10000.0,
+  "created_at": "2026-04-22T10:00:00Z"
+}
+\end{lstlisting}
+
+\begin{infobox}
+\textbf{À noter :} Copier l'\texttt{id} retourné pour l'utiliser dans les étapes suivantes.
+\end{infobox}
+
+\subsubsection{Étape 3 — Tester la validation (CT-03, CT-04, CT-05)}
+
+\begin{lstlisting}[style=bash, caption={Test CT-05 : solde negatif}]
+POST http://localhost:8000/accounts
+Content-Type: application/json
+
+{
+  "full_name": "TEST",
+  "phone_number": "600000001",
+  "initial_balance": -500
+}
+\end{lstlisting}
+
+\begin{dangerbox}
+\textbf{Résultat attendu :} HTTP 422 avec un message d'erreur Pydantic indiquant que \texttt{initial\_balance} doit être $\geq 0$.
+\end{dangerbox}
+
+\subsubsection{Étape 4 — Effectuer un dépôt (CT-10)}
+
+\begin{lstlisting}[style=bash, caption={Appel POST /accounts/\{id\}/deposit}]
+POST http://localhost:8000/accounts/a3f1b2c4-.../deposit
+Content-Type: application/json
+
+{
+  "amount": 5000,
+  "description": "Depot agence"
+}
+\end{lstlisting}
+
+\begin{lstlisting}[style=json, caption={Reponse attendue — HTTP 200, balance = 15000}]
+{
+  "id": "a3f1b2c4-...",
+  "balance": 15000.0,
+  "transactions": [
+    {
+      "transaction_type": "deposit",
+      "amount": 10000.0,
+      "description": "Solde initial",
+      "balance_after": 10000.0
+    },
+    {
+      "transaction_type": "deposit",
+      "amount": 5000.0,
+      "description": "Depot agence",
+      "balance_after": 15000.0
+    }
+  ]
+}
+\end{lstlisting}
+
+\subsubsection{Étape 5 — Effectuer un retrait valide (CT-15)}
+
+\begin{lstlisting}[style=bash, caption={Appel POST /accounts/\{id\}/withdraw}]
+POST http://localhost:8000/accounts/a3f1b2c4-.../withdraw
+Content-Type: application/json
+
+{
+  "amount": 2000,
+  "description": "Retrait DAB"
+}
+\end{lstlisting}
+
+\begin{successbox}
+\textbf{Résultat attendu :} HTTP 200, balance = 13000 (15000 - 2000).
+\end{successbox}
+
+\subsubsection{Étape 6 — Tester le solde insuffisant (CT-17)}
+
+\begin{lstlisting}[style=bash, caption={Test CT-17 : retrait impossible}]
+POST http://localhost:8000/accounts/a3f1b2c4-.../withdraw
+Content-Type: application/json
+
+{
+  "amount": 50000,
+  "description": "Test solde insuffisant"
+}
+\end{lstlisting}
+
+\begin{dangerbox}
+\textbf{Résultat attendu :} HTTP 400\\
+Corps : \texttt{\{"detail": "Solde insuffisant pour effectuer ce retrait."\}}
+\end{dangerbox}
+
+\subsubsection{Étape 7 — Consulter l'historique (CT-22)}
+
+\begin{lstlisting}[style=bash, caption={Appel GET /accounts/\{id\}/transactions}]
+GET http://localhost:8000/accounts/a3f1b2c4-.../transactions
+\end{lstlisting}
+
+\begin{successbox}
+\textbf{Résultat attendu :} HTTP 200 avec 3 transactions dans l'ordre chronologique :\\
+1. Dépôt initial (10 000)\\
+2. Dépôt agence (5 000) → balance 15 000\\
+3. Retrait DAB (2 000) → balance 13 000
+\end{successbox}
+
+\subsubsection{Étape 8 — Tester un ID inexistant (CT-09)}
+
+\begin{lstlisting}[style=bash, caption={Test CT-09 : compte inexistant}]
+GET http://localhost:8000/accounts/00000000-0000-0000-0000-000000000000
+\end{lstlisting}
+
+\begin{dangerbox}
+\textbf{Résultat attendu :} HTTP 404\\
+Corps : \texttt{\{"detail": "Compte introuvable."\}}
+\end{dangerbox}
+
+% =========================================================
+\section{Documentation Swagger}
+% =========================================================
+
+\subsection{Accès à l'interface}
+
+L'interface Swagger UI est accessible à l'adresse \texttt{http://localhost:8000/docs} une fois le serveur lancé. Elle permet de tester toutes les fonctions de l'API directement depuis le navigateur, sans outil externe.
+
+\subsection{Exemples interactifs dans Swagger}
+
+L'API intègre des \textbf{exemples nommés} dans Swagger pour chaque endpoint de création et de transaction. Ces exemples apparaissent dans un menu déroulant \textit{«~Examples~»} permettant de basculer entre les cas de test.
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Endpoint} & \textbf{Exemples disponibles} \\
+\midrule
+\texttt{POST /accounts} & CT-01, CT-02, CT-03, CT-04, CT-05 \\
+\texttt{POST /\{id\}/deposit} & CT-10, CT-11, CT-12, CT-13 \\
+\texttt{POST /\{id\}/withdraw} & CT-15, CT-16, CT-17, CT-18, CT-19 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Comment utiliser Swagger pour le test manuel}
+
+\begin{enumerate}
+  \item Lancer l'API : \texttt{uvicorn app.main:app -{}-reload}
+  \item Ouvrir \texttt{http://localhost:8000/docs} dans le navigateur
+  \item Cliquer sur un endpoint (ex : \textit{POST /accounts})
+  \item Cliquer sur le bouton \textbf{«~Try it out~»}
+  \item Sélectionner un exemple dans le menu déroulant \textbf{«~Examples~»}
+  \item Cliquer sur \textbf{«~Execute~»}
+  \item Observer le code HTTP et le corps de la réponse dans la section \textit{Responses}
+\end{enumerate}
+
+% =========================================================
+\section{Lancement et déploiement}
+% =========================================================
+
+\subsection{Lancement en local}
+
+\begin{lstlisting}[style=bash, caption={Lancement de l'API en local}]
+# 1. Installer les dependances
+pip install -r requirements.txt
+
+# 2. Lancer le serveur (mode developpement avec rechargement automatique)
+uvicorn app.main:app --reload
+
+# 3. L'API est disponible sur :
+#    http://localhost:8000/
+#    http://localhost:8000/docs  (Swagger UI)
+\end{lstlisting}
+
+\subsection{Contenu de requirements.txt}
+
+\begin{lstlisting}[style=bash, caption={requirements.txt}]
+fastapi
+uvicorn[standard]
+\end{lstlisting}
+
+\subsection{Déploiement sur Render}
+
+Le fichier \texttt{render.yaml} à la racine du projet configure le déploiement automatique sur la plateforme cloud \textbf{Render.com}. À chaque push sur la branche \texttt{main} de GitHub, le service est automatiquement mis à jour.
+
+% =========================================================
+\section{Conclusion}
+% =========================================================
+
+Ce projet implémente une \textbf{API REST complète} pour la gestion de comptes bancaires, respectant toutes les exigences fonctionnelles et non fonctionnelles définies dans le cahier des charges.
+
+\subsection*{Points clés de l'implémentation}
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Séparation des responsabilités} : 3 modules distincts avec des rôles clairs
+  \item \textbf{Validation automatique} : Pydantic assure la validité de toutes les données entrantes
+  \item \textbf{Persistance fiable} : fichier JSON protégé par un verrou thread-safe
+  \item \textbf{Documentation interactive} : 23 cas de test directement exécutables dans Swagger
+  \item \textbf{Codes HTTP corrects} : 201 (création), 200 (succès), 400 (logique métier), 404 (non trouvé), 422 (validation)
+\end{itemize}
+
+\subsection*{Ce que ce projet ne fait pas encore (limites)}
+
+\begin{itemize}[noitemsep]
+  \item Pas d'authentification (JWT ou sessions)
+  \item Pas de base de données relationnelle (SQLite, PostgreSQL)
+  \item Pas de virement entre comptes
+  \item Pas de séparation des rôles client/administrateur
+\end{itemize}
+
+Ces éléments constituent des évolutions naturelles pour une version future du système.
+
+\vfill
+\begin{center}
+\rule{0.5\linewidth}{0.5pt}\\[0.3cm]
+{\small KOA ESSAMA PAULIN BRICE — Matricule 25I2255 — Licence 3 ICT\\
+Université de Yaoundé I — Avril 2026}
+\end{center}
+
+\end{document}
