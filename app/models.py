@@ -57,9 +57,34 @@ class TransactionRequest(BaseModel):
     )
 
 
+class TransferRequest(BaseModel):
+    to_account_id: str = Field(
+        ...,
+        description="Identifiant UUID du compte destinataire.",
+        examples=["b5c6d7e8-f9a0-1234-bcde-567890abcdef"],
+    )
+    amount: float = Field(
+        ...,
+        gt=0,
+        description="Montant a virer. Il doit etre strictement positif.",
+        examples=[3000],
+    )
+    description: str | None = Field(
+        default=None,
+        max_length=150,
+        description="Motif du virement.",
+        examples=["Remboursement loyer"],
+    )
+
+
+class TransferResponse(BaseModel):
+    from_account: "AccountDetails" = Field(description="Compte source apres le virement.")
+    to_account: "AccountDetails" = Field(description="Compte destinataire apres le virement.")
+
+
 class TransactionResponse(BaseModel):
     transaction_id: str = Field(description="Identifiant unique de la transaction.")
-    transaction_type: Literal["deposit", "withdraw"] = Field(description="Type de transaction.")
+    transaction_type: Literal["deposit", "withdraw", "transfer_out", "transfer_in"] = Field(description="Type de transaction.")
     amount: float = Field(description="Montant de la transaction.")
     description: str | None = Field(default=None, description="Description de la transaction.")
     balance_after: float = Field(description="Solde du compte apres l'operation.")
@@ -68,6 +93,9 @@ class TransactionResponse(BaseModel):
 
 class AccountDetails(AccountResponse):
     transactions: list[TransactionResponse] = Field(default_factory=list)
+
+
+TransferResponse.model_rebuild()
 
 
 class HomeResponse(BaseModel):

@@ -10,8 +10,10 @@ from app.models import (
     HomeResponse,
     TransactionRequest,
     TransactionResponse,
+    TransferRequest,
+    TransferResponse,
 )
-from app.storage import apply_transaction, create_account, get_account, initialize_storage, list_accounts
+from app.storage import apply_transaction, create_account, get_account, initialize_storage, list_accounts, transfer
 
 
 app = FastAPI(
@@ -32,6 +34,7 @@ API REST permettant de gerer des comptes bancaires et d'executer des operations 
 | 3 | Consulter un compte | GET | `/accounts/{account_id}` |
 | 4 | Effectuer un depot | POST | `/accounts/{account_id}/deposit` |
 | 5 | Effectuer un retrait | POST | `/accounts/{account_id}/withdraw` |
+| 6 | Virement entre comptes | POST | `/accounts/{account_id}/transfer` |
 | + | Historique des transactions | GET | `/accounts/{account_id}/transactions` |
 
 ---
@@ -447,6 +450,103 @@ def withdraw_money(account_id: str, payload: TransactionRequest) -> dict:
     if not updated_account:
         raise HTTPException(status_code=404, detail="Compte introuvable.")
     return updated_account
+
+
+@app.post(
+    "/accounts/{account_id}/transfer",
+    response_model=TransferResponse,
+    tags=["Transactions"],
+    summary="Effectuer un virement",
+    description="""
+Transfère un montant du compte source vers un compte destinataire en une seule opération atomique.
+
+Les deux comptes sont mis à jour simultanément. Si le solde du compte source est insuffisant, le virement est refusé.
+
+**Cas de test couverts par cet endpoint :**
+
+| # | Cas | Précondition | Données | Résultat attendu | Code HTTP |
+|---|-----|-------------|---------|-----------------|-----------|
+| CT-24 | Virement valide | Source >= montant | `to_account_id`, `amount: 3000` | Solde source diminue, solde destinataire augmente | 200 |
+| CT-25 | Virement avec description | Source >= montant | `to_account_id`, `amount: 1000`, `description` | Description visible dans les deux historiques | 200 |
+| CT-26 | Solde insuffisant | Source < montant | `amount: 50000` | Erreur : Solde insuffisant | 400 |
+| CT-27 | Virement vers soi-même | même ID source et dest | même `account_id` | Erreur : virement interdit | 400 |
+| CT-28 | Compte source inexistant | ID source invalide | n'importe quel body | Compte introuvable | 404 |
+| CT-29 | Compte destinataire inexistant | ID destinataire invalide | `to_account_id` invalide | Compte introuvable | 404 |
+
+**Test manuel :**
+1. Créer deux comptes A (10 000) et B (5 000)
+2. Virer 3 000 de A vers B → A = 7 000, B = 8 000
+3. Vérifier les transactions des deux comptes : `transfer_out` sur A, `transfer_in` sur B
+4. Tenter un virement de A vers A → vérifier HTTP 400
+5. Tenter un virement de 50 000 → vérifier HTTP 400
+""",
+    responses={
+        400: {"model": ErrorResponse, "description": "Solde insuffisant ou virement invalide."},
+        404: {"model": ErrorResponse, "description": "Compte source ou destinataire introuvable."},
+    },
+    openapi_extra={
+        "requestBody": {
+            "content": {
+                "application/json": {
+                    "examples": {
+                        "CT-24 — Virement valide": {
+                            "summary": "CT-24 : Virement valide (cas nominal)",
+                            "description": "Précondition : solde source >= 3000. Résultat : solde source diminue, solde destinataire augmente.",
+                            "value": {
+                                "to_account_id": "COLLER-ICI-L-ID-DU-COMPTE-DESTINATAIRE",
+                                "amount": 3000,
+                            },
+                        },
+                        "CT-25 — Virement avec description": {
+                            "summary": "CT-25 : Virement avec motif (cas nominal)",
+                            "description": "La description apparait dans les deux historiques.",
+                            "value": {
+                                "to_account_id": "COLLER-ICI-L-ID-DU-COMPTE-DESTINATAIRE",
+                                "amount": 1000,
+                                "description": "Remboursement loyer",
+                            },
+                        },
+                        "CT-26 — Solde insuffisant": {
+                            "summary": "CT-26 : Solde insuffisant → 400",
+                            "description": "Résultat attendu : HTTP 400.",
+                            "value": {
+                                "to_account_id": "COLLER-ICI-L-ID-DU-COMPTE-DESTINATAIRE",
+                                "amount": 50000,
+                            },
+                        },
+                        "CT-27 — Virement vers soi-même": {
+                            "summary": "CT-27 : Même compte source et destinataire → 400",
+                            "description": "Résultat attendu : HTTP 400.",
+                            "value": {
+                                "to_account_id": "MEME-ID-QUE-LE-COMPTE-SOURCE",
+                                "amount": 1000,
+                            },
+                        },
+                    }
+                }
+            }
+        }
+    },
+)
+def transfer_money(account_id: str, payload: TransferRequest) -> dict:
+    if account_id == payload.to_account_id:
+        raise HTTPException(status_code=400, detail="Le compte source et le compte destinataire doivent etre differents.")
+
+    try:
+        result = transfer(
+            from_id=account_id,
+            to_id=payload.to_account_id,
+            amount=payload.amount,
+            description=payload.description,
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+    if result is None:
+        raise HTTPException(status_code=404, detail="Compte source ou destinataire introuvable.")
+
+    from_account, to_account = result
+    return {"from_account": from_account, "to_account": to_account}
 
 
 @app.get(

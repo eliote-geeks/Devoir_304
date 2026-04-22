@@ -79,6 +79,51 @@ def create_account(payload: dict) -> dict:
         return account
 
 
+def transfer(from_id: str, to_id: str, amount: float, description: str | None) -> tuple[dict, dict] | None:
+    with FILE_LOCK:
+        data = _read_data()
+        accounts = data["accounts"]
+
+        from_account = next((a for a in accounts if a["id"] == from_id), None)
+        to_account = next((a for a in accounts if a["id"] == to_id), None)
+
+        if from_account is None or to_account is None:
+            return None
+
+        amount = round(float(amount), 2)
+
+        if amount > round(float(from_account["balance"]), 2):
+            raise ValueError("Solde insuffisant pour effectuer ce virement.")
+
+        now = _now()
+        transfer_id = str(uuid4())
+
+        from_account["balance"] = round(float(from_account["balance"]) - amount, 2)
+        from_account["transactions"].append({
+            "transaction_id": str(uuid4()),
+            "transaction_type": "transfer_out",
+            "amount": amount,
+            "description": description or f"Virement vers {to_account['account_number']}",
+            "balance_after": from_account["balance"],
+            "created_at": now,
+            "transfer_id": transfer_id,
+        })
+
+        to_account["balance"] = round(float(to_account["balance"]) + amount, 2)
+        to_account["transactions"].append({
+            "transaction_id": str(uuid4()),
+            "transaction_type": "transfer_in",
+            "amount": amount,
+            "description": description or f"Virement de {from_account['account_number']}",
+            "balance_after": to_account["balance"],
+            "created_at": now,
+            "transfer_id": transfer_id,
+        })
+
+        _write_data(data)
+        return from_account, to_account
+
+
 def apply_transaction(account_id: str, transaction_type: str, amount: float, description: str | None) -> dict | None:
     with FILE_LOCK:
         data = _read_data()
