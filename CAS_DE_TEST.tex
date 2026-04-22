@@ -1,0 +1,370 @@
+\documentclass[12pt,a4paper,landscape]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{colortbl}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{multirow}
+
+% ---- Couleurs ----
+\definecolor{headergreen}{RGB}{92, 184, 92}
+\definecolor{headerdark}{RGB}{60, 118, 61}
+\definecolor{titlebg}{RGB}{70, 180, 210}
+\definecolor{rowtitle}{RGB}{220, 53, 69}
+\definecolor{rowalt}{RGB}{245, 255, 245}
+\definecolor{passgreen}{RGB}{40, 167, 69}
+\definecolor{failred}{RGB}{220, 53, 69}
+\definecolor{lightgray}{RGB}{248, 248, 248}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textbf{Devoir 304 — Cas de test — Systeme de transaction bancaire}}
+\fancyhead[R]{Avril 2026}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+% Colonne à largeur fixe avec retour à la ligne
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\begin{document}
+
+% =========================================================
+% TITRE
+% =========================================================
+\begin{center}
+  {\Large\bfseries\colorbox{titlebg}{\textcolor{white}{\quad Catégories de tests logiciels \quad}}}\\[0.5cm]
+  {\large\bfseries\textcolor{rowtitle}{Conception et gestion des cas de test}}\\[0.2cm]
+  {\large\bfseries\textcolor{blue}{Format de cas de test (modèle 1)}}\\[0.5cm]
+  {\normalsize API de transaction bancaire — 6 fonctions — 29 cas de test}
+\end{center}
+
+% =========================================================
+% FONCTION 1 — Créer un compte
+% =========================================================
+\vspace{0.3cm}
+{\bfseries\large\textcolor{rowtitle}{Fonction 1 : Créer un compte \quad \texttt{POST /accounts}}}
+\vspace{0.2cm}
+
+\begin{longtable}{|L{2cm}|L{5cm}|L{6.5cm}|L{5cm}|L{2.5cm}|}
+\hline
+\rowcolor{headergreen}
+\textbf{\textcolor{white}{Test Case ID}} &
+\textbf{\textcolor{white}{Test Case Description}} &
+\textbf{\textcolor{white}{Test Input (Test Case Value)}} &
+\textbf{\textcolor{white}{Expected Results}} &
+\textbf{\textcolor{white}{Test Case Status}} \\
+\hline
+CT-01 &
+Création valide avec tous les champs &
+\texttt{full\_name: "KOA ESSAMA PAULIN BRICE"} \newline \texttt{phone\_number: "699001122"} \newline \texttt{email: "paulin@example.com"} \newline \texttt{initial\_balance: 10000} &
+HTTP 201 — Compte créé avec un \texttt{id} UUID et un \texttt{account\_number} générés automatiquement. \texttt{balance = 10000} &
+PASS \\
+\hline
+\rowcolor{rowalt}
+CT-02 &
+Création valide sans email ni solde initial &
+\texttt{full\_name: "NGUEMA CAROLE"} \newline \texttt{phone\_number: "677445566"} &
+HTTP 201 — Compte créé avec \texttt{balance = 0} et \texttt{email = null} &
+PASS \\
+\hline
+CT-03 &
+Champ \texttt{full\_name} absent &
+\texttt{phone\_number: "699001122"} \newline \texttt{initial\_balance: 5000} &
+HTTP 400 / 422 — Erreur : \textit{"full\_name et phone\_number sont obligatoires."} &
+PASS \\
+\hline
+\rowcolor{rowalt}
+CT-04 &
+Champ \texttt{phone\_number} absent &
+\texttt{full\_name: "KOA ESSAMA PAULIN BRICE"} \newline \texttt{initial\_balance: 5000} &
+HTTP 400 / 422 — Erreur : champ obligatoire manquant &
+PASS \\
+\hline
+CT-05 &
+Solde initial négatif &
+\texttt{full\_name: "TEST"} \newline \texttt{phone\_number: "600000001"} \newline \texttt{initial\_balance: -500} &
+HTTP 400 / 422 — Erreur : \textit{"Le solde initial doit être positif ou nul."} &
+PASS \\
+\hline
+\end{longtable}
+
+% =========================================================
+% FONCTION 2 — Lister les comptes
+% =========================================================
+\vspace{0.3cm}
+{\bfseries\large\textcolor{rowtitle}{Fonction 2 : Lister les comptes \quad \texttt{GET /accounts}}}
+\vspace{0.2cm}
+
+\begin{longtable}{|L{2cm}|L{5cm}|L{6.5cm}|L{5cm}|L{2.5cm}|}
+\hline
+\rowcolor{headergreen}
+\textbf{\textcolor{white}{Test Case ID}} &
+\textbf{\textcolor{white}{Test Case Description}} &
+\textbf{\textcolor{white}{Test Input (Test Case Value)}} &
+\textbf{\textcolor{white}{Expected Results}} &
+\textbf{\textcolor{white}{Test Case Status}} \\
+\hline
+CT-06 &
+Liste vide au démarrage &
+Aucun compte créé. \newline Requête : \texttt{GET /accounts} &
+HTTP 200 — Corps : \texttt{[]} (tableau vide) &
+PASS \\
+\hline
+\rowcolor{rowalt}
+CT-07 &
+Liste avec comptes existants &
+Au moins un compte créé au préalable. \newline Requête : \texttt{GET /accounts} &
+HTTP 200 — Tableau de comptes sans la liste des transactions &
+PASS \\
+\hline
+\end{longtable}
+
+% =========================================================
+% FONCTION 3 — Consulter un compte
+% =========================================================
+\vspace{0.3cm}
+{\bfseries\large\textcolor{rowtitle}{Fonction 3 : Consulter un compte \quad \texttt{GET /accounts/\{account\_id\}}}}
+\vspace{0.2cm}
+
+\begin{longtable}{|L{2cm}|L{5cm}|L{6.5cm}|L{5cm}|L{2.5cm}|}
+\hline
+\rowcolor{headergreen}
+\textbf{\textcolor{white}{Test Case ID}} &
+\textbf{\textcolor{white}{Test Case Description}} &
+\textbf{\textcolor{white}{Test Input (Test Case Value)}} &
+\textbf{\textcolor{white}{Expected Results}} &
+\textbf{\textcolor{white}{Test Case Status}} \\
+\hline
+CT-08 &
+Consulter un compte existant &
+\texttt{account\_id} = UUID valide récupéré après création &
+HTTP 200 — Détails du compte avec l'historique complet des transactions &
+PASS \\
+\hline
+\rowcolor{rowalt}
+CT-09 &
+Consulter un compte inexistant &
+\texttt{account\_id} = \texttt{00000000-0000-0000-0000-000000000000} (ID invalide) &
+HTTP 404 — \textit{"Compte introuvable."} &
+PASS \\
+\hline
+\end{longtable}
+
+% =========================================================
+% FONCTION 4 — Dépôt
+% =========================================================
+\vspace{0.3cm}
+{\bfseries\large\textcolor{rowtitle}{Fonction 4 : Effectuer un dépôt \quad \texttt{POST /accounts/\{account\_id\}/deposit}}}
+\vspace{0.2cm}
+
+\begin{longtable}{|L{2cm}|L{5cm}|L{6.5cm}|L{5cm}|L{2.5cm}|}
+\hline
+\rowcolor{headergreen}
+\textbf{\textcolor{white}{Test Case ID}} &
+\textbf{\textcolor{white}{Test Case Description}} &
+\textbf{\textcolor{white}{Test Input (Test Case Value)}} &
+\textbf{\textcolor{white}{Expected Results}} &
+\textbf{\textcolor{white}{Test Case Status}} \\
+\hline
+CT-10 &
+Dépôt valide sans description &
+Compte avec \texttt{balance = 10000} \newline \texttt{amount: 5000} &
+HTTP 200 — \texttt{balance = 15000}. Transaction de type \texttt{deposit} enregistrée &
+PASS \\
+\hline
+\rowcolor{rowalt}
+CT-11 &
+Dépôt valide avec description &
+Compte existant \newline \texttt{amount: 3000} \newline \texttt{description: "Depot agence"} &
+HTTP 200 — Solde augmente, libellé visible dans l'historique &
+PASS \\
+\hline
+CT-12 &
+Montant égal à zéro &
+Compte existant \newline \texttt{amount: 0} &
+HTTP 400 / 422 — \textit{"Le montant doit être strictement positif."} &
+PASS \\
+\hline
+\rowcolor{rowalt}
+CT-13 &
+Montant négatif &
+Compte existant \newline \texttt{amount: -1000} &
+HTTP 400 / 422 — \textit{"Le montant doit être strictement positif."} &
+PASS \\
+\hline
+CT-14 &
+Dépôt sur un compte inexistant &
+\texttt{account\_id} invalide \newline \texttt{amount: 5000} &
+HTTP 404 — \textit{"Compte introuvable."} &
+PASS \\
+\hline
+\end{longtable}
+
+% =========================================================
+% FONCTION 5 — Retrait
+% =========================================================
+\vspace{0.3cm}
+{\bfseries\large\textcolor{rowtitle}{Fonction 5 : Effectuer un retrait \quad \texttt{POST /accounts/\{account\_id\}/withdraw}}}
+\vspace{0.2cm}
+
+\begin{longtable}{|L{2cm}|L{5cm}|L{6.5cm}|L{5cm}|L{2.5cm}|}
+\hline
+\rowcolor{headergreen}
+\textbf{\textcolor{white}{Test Case ID}} &
+\textbf{\textcolor{white}{Test Case Description}} &
+\textbf{\textcolor{white}{Test Input (Test Case Value)}} &
+\textbf{\textcolor{white}{Expected Results}} &
+\textbf{\textcolor{white}{Test Case Status}} \\
+\hline
+CT-15 &
+Retrait valide, solde suffisant &
+Compte avec \texttt{balance = 10000} \newline \texttt{amount: 2000} \newline \texttt{description: "Retrait DAB"} &
+HTTP 200 — \texttt{balance = 8000}. Transaction \texttt{withdraw} enregistrée &
+PASS \\
+\hline
+\rowcolor{rowalt}
+CT-16 &
+Retrait égal au solde disponible &
+Compte avec \texttt{balance = 10000} \newline \texttt{amount: 10000} &
+HTTP 200 — \texttt{balance = 0}. Compte vidé, transaction enregistrée &
+PASS \\
+\hline
+CT-17 &
+Solde insuffisant &
+Compte avec \texttt{balance = 1000} \newline \texttt{amount: 50000} &
+HTTP 400 — \textit{"Solde insuffisant pour effectuer ce retrait."} &
+PASS \\
+\hline
+\rowcolor{rowalt}
+CT-18 &
+Montant égal à zéro &
+Compte existant \newline \texttt{amount: 0} &
+HTTP 400 / 422 — \textit{"Le montant doit être strictement positif."} &
+PASS \\
+\hline
+CT-19 &
+Montant négatif &
+Compte existant \newline \texttt{amount: -500} &
+HTTP 400 / 422 — \textit{"Le montant doit être strictement positif."} &
+PASS \\
+\hline
+\rowcolor{rowalt}
+CT-20 &
+Retrait sur un compte inexistant &
+\texttt{account\_id} invalide \newline \texttt{amount: 1000} &
+HTTP 404 — \textit{"Compte introuvable."} &
+PASS \\
+\hline
+\end{longtable}
+
+% =========================================================
+% FONCTION 6 — Virement
+% =========================================================
+\vspace{0.3cm}
+{\bfseries\large\textcolor{rowtitle}{Fonction 6 : Virement entre comptes \quad \texttt{POST /accounts/\{account\_id\}/transfer}}}
+\vspace{0.2cm}
+
+\begin{longtable}{|L{2cm}|L{5cm}|L{6.5cm}|L{5cm}|L{2.5cm}|}
+\hline
+\rowcolor{headergreen}
+\textbf{\textcolor{white}{Test Case ID}} &
+\textbf{\textcolor{white}{Test Case Description}} &
+\textbf{\textcolor{white}{Test Input (Test Case Value)}} &
+\textbf{\textcolor{white}{Expected Results}} &
+\textbf{\textcolor{white}{Test Case Status}} \\
+\hline
+CT-24 &
+Virement valide entre deux comptes &
+Compte A : \texttt{balance = 10000} \newline Compte B : \texttt{balance = 5000} \newline \texttt{to\_account\_id} = ID du compte B \newline \texttt{amount: 3000} &
+HTTP 200 — Compte A : \texttt{balance = 7000}, Compte B : \texttt{balance = 8000}. \newline Transactions \texttt{transfer\_out} (A) et \texttt{transfer\_in} (B) enregistrées &
+PASS \\
+\hline
+\rowcolor{rowalt}
+CT-25 &
+Virement valide avec description &
+Compte A et B existants \newline \texttt{amount: 1000} \newline \texttt{description: "Remboursement loyer"} &
+HTTP 200 — Description visible dans les deux historiques de transactions &
+PASS \\
+\hline
+CT-26 &
+Solde insuffisant pour le virement &
+Compte A : \texttt{balance = 1000} \newline \texttt{amount: 50000} &
+HTTP 400 — \textit{"Solde insuffisant pour effectuer ce virement."} &
+PASS \\
+\hline
+\rowcolor{rowalt}
+CT-27 &
+Virement vers le même compte &
+\texttt{to\_account\_id} = même \texttt{account\_id} que la source \newline \texttt{amount: 1000} &
+HTTP 400 — \textit{"Le compte source et le compte destinataire doivent être différents."} &
+PASS \\
+\hline
+CT-28 &
+Compte source inexistant &
+\texttt{account\_id} invalide \newline \texttt{to\_account\_id} valide \newline \texttt{amount: 1000} &
+HTTP 404 — \textit{"Compte introuvable."} &
+PASS \\
+\hline
+\rowcolor{rowalt}
+CT-29 &
+Compte destinataire inexistant &
+\texttt{account\_id} valide \newline \texttt{to\_account\_id} = \texttt{00000000-0000-0000-0000-000000000000} \newline \texttt{amount: 1000} &
+HTTP 404 — \textit{"Compte destinataire introuvable."} &
+PASS \\
+\hline
+\end{longtable}
+
+% =========================================================
+% FONCTION + — Historique des transactions
+% =========================================================
+\vspace{0.3cm}
+{\bfseries\large\textcolor{rowtitle}{Fonction + : Historique des transactions \quad \texttt{GET /accounts/\{account\_id\}/transactions}}}
+\vspace{0.2cm}
+
+\begin{longtable}{|L{2cm}|L{5cm}|L{6.5cm}|L{5cm}|L{2.5cm}|}
+\hline
+\rowcolor{headergreen}
+\textbf{\textcolor{white}{Test Case ID}} &
+\textbf{\textcolor{white}{Test Case Description}} &
+\textbf{\textcolor{white}{Test Input (Test Case Value)}} &
+\textbf{\textcolor{white}{Expected Results}} &
+\textbf{\textcolor{white}{Test Case Status}} \\
+\hline
+CT-21 &
+Historique d'un compte sans opération &
+Compte créé avec \texttt{initial\_balance = 0} \newline \texttt{GET /accounts/\{id\}/transactions} &
+HTTP 200 — Corps : \texttt{[]} (aucune transaction) &
+PASS \\
+\hline
+\rowcolor{rowalt}
+CT-22 &
+Historique avec plusieurs opérations &
+Compte avec dépôt, retrait et virement effectués \newline \texttt{GET /accounts/\{id\}/transactions} &
+HTTP 200 — Liste chronologique de toutes les transactions avec \texttt{transaction\_type}, \texttt{amount}, \texttt{balance\_after} &
+PASS \\
+\hline
+CT-23 &
+Historique d'un compte inexistant &
+\texttt{account\_id} invalide &
+HTTP 404 — \textit{"Compte introuvable."} &
+PASS \\
+\hline
+\end{longtable}
+
+\vfill
+\begin{center}
+\rule{0.5\linewidth}{0.5pt}\\[0.2cm]
+{\small Total : \textbf{29 cas de test} couvrant les 6 fonctions du système}
+\end{center}
+
+\end{document}
