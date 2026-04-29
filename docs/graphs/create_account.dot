@@ -1,0 +1,18 @@
+digraph create_account {
+  rankdir=TB;
+  node [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled", fillcolor="#EAF4FF", color="#1F5A99"];
+  edge [fontname="Helvetica", fontsize=9, color="#444444"];
+
+  start [label="Début", shape=ellipse, fillcolor="#D5F5E3", color="#1E8449"];
+  n1 [label="Construire l'objet compte"];
+  d1 [label="balance > 0 ?", shape=diamond, fillcolor="#FFF3CD", color="#B9770E"];
+  n2 [label="Ajouter transaction\n\"Solde initial\""];
+  n3 [label="Ajouter le compte\nau tableau JSON"];
+  n4 [label="Écrire le fichier JSON"];
+  ok [label="Retour compte créé", shape=ellipse, fillcolor="#D5F5E3", color="#1E8449"];
+
+  start -> n1 -> d1;
+  d1 -> n2 [label="Oui"];
+  d1 -> n3 [label="Non"];
+  n2 -> n3 -> n4 -> ok;
+}

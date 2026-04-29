@@ -63,6 +63,12 @@ curl -X POST http://127.0.0.1:8000/accounts \
   }'
 ```
 
+## Documents
+
+- rapport d'implémentation : [`RAPPORT_IMPLEMENTATION.pdf`](RAPPORT_IMPLEMENTATION.pdf)
+- cas de test : [`CAS_DE_TEST.pdf`](CAS_DE_TEST.pdf)
+- analyse C1/C2 avec complexité cyclomatique et graphes visuels : [`ANALYSE_C1_C2.pdf`](ANALYSE_C1_C2.pdf)
+
 ## Structure du projet
 
 ```text

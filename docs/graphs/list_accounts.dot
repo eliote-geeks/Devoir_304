@@ -1,0 +1,12 @@
+digraph list_accounts {
+  rankdir=TB;
+  node [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled", fillcolor="#EAF4FF", color="#1F5A99"];
+  edge [fontname="Helvetica", fontsize=9, color="#444444"];
+
+  start [label="Début", shape=ellipse, fillcolor="#D5F5E3", color="#1E8449"];
+  n1 [label="Lire accounts.json"];
+  n2 [label="Retourner data[\"accounts\"]"];
+  ok [label="Retour HTTP 200", shape=ellipse, fillcolor="#D5F5E3", color="#1E8449"];
+
+  start -> n1 -> n2 -> ok;
+}

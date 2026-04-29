@@ -1,0 +1,15 @@
+digraph get_account {
+  rankdir=TB;
+  node [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled", fillcolor="#EAF4FF", color="#1F5A99"];
+  edge [fontname="Helvetica", fontsize=9, color="#444444"];
+
+  start [label="Début", shape=ellipse, fillcolor="#D5F5E3", color="#1E8449"];
+  n1 [label="Rechercher account_id\ndans la liste"];
+  d1 [label="Compte trouvé ?", shape=diamond, fillcolor="#FFF3CD", color="#B9770E"];
+  ok [label="Retour HTTP 200\n(détails du compte)", shape=ellipse, fillcolor="#D5F5E3", color="#1E8449"];
+  ko [label="Retour HTTP 404", shape=ellipse, fillcolor="#FADBD8", color="#C0392B"];
+
+  start -> n1 -> d1;
+  d1 -> ok [label="Oui"];
+  d1 -> ko [label="Non"];
+}
